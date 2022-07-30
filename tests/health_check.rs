@@ -1,8 +1,7 @@
 use std::net::TcpListener;
 
 #[actix_web::test]
-async fn health_check_works()
-{
+async fn health_check_works() {
     let adress = spawn_app();
 
     // We need to bring in "reqwest"
@@ -28,6 +27,6 @@ fn spawn_app() -> String {
     // Launch the server as a background task
     // tokio::spawn returns a handle to the spawned future,
     // but we have no use for it here, hence the non-binding list
-    let _ = actix_web::rt::spawn(server); 
+    let _ = actix_web::rt::spawn(server);
     format!("http://127.0.0.1:{}", port)
 }
