@@ -10,16 +10,17 @@ fi
 if ! [ -x "$(command -v sqlx)" ]; then
     echo >&2 "Error: sqlx is not installed."
     echo >&2 "Use:"
-    echo >&2 " cargo install --version=0.6.0 sqlx-cli --no-default-features --features postgres"
+    echo >&2 "   cargo install --version=0.6.0 sqlx-cli --no-default-features --features postgres"
     echo >&2 "to install it."
-exit 1
+    exit 1
 fi
 
 while getopts 'd' flag; do
   case "${flag}" in
-    d) SKIP_DOCKER='true'
+    d) SKIP_DOCKER=true
         echo >&2 "skip docker";;
-    *) exit 1 ;;
+    *) SKIP_DOCKER=false
+        exit 1 ;;
   esac
 done
 
@@ -36,12 +37,12 @@ DB_PORT="${POSTGRES_PORT:=5432}"
 if [[ -z "${SKIP_DOCKER}" ]]
 then
     docker run \
-    -e POSTGRES_USER=${DB_USER} \
-    -e POSTGRES_PASSWORD=${DB_PASSWORD} \
-    -e POSTGRES_DB=${DB_NAME} \
-    -p "${DB_PORT}":5432 \
-    -d postgres \
-    postgres -N 1000
+        -e POSTGRES_USER=${DB_USER} \
+        -e POSTGRES_PASSWORD=${DB_PASSWORD} \
+        -e POSTGRES_DB=${DB_NAME} \
+        -p "${DB_PORT}":5432 \
+        -d postgres \
+        postgres -N 1000
 fi
 # ^ Increased maximum number of connections for testing purposesset -x
 
